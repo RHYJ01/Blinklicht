@@ -11,15 +11,28 @@ Datum: 06.08.2018
 
 int main()
 {
-   DDRB=0xFF;
-   PORTB=0xF0;
+   DDRB=0xFF;  //Eingänge und Ausgänge deklarieren
+   PORTB=0x00; //LEDs Ein und Ausschalten
    
    DDRC=0b11011111;
    PORTC=0x00;
    
    
    PORTB|=((1<<PB0)|(1<<PB1)); //setzen mehrerer Bits
+   
    PORTB&=~(1<<PB7); //löschen eines Bits
    
    PORTB^=(1<<PB2); //Toggeln, das Bit invertieren
+   
+   
+   while(1)
+   {
+   if (!(PINC&(1<<PC5)))//testen ob der Taster  LOW ist
+	{
+	PORTB|=(1<<PB7);    // Wenn der Schalter LOW ist, PB7 HIGH
+	
+	}
+  
+   }
+   
 }
