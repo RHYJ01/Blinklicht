@@ -8,6 +8,37 @@
 #include <avr/io.h>
 #include <stdlib.h>
 
+#define TASTER_C5 !(PINC&(1<<PC5))
+
+	
+
+
+uint8_t taster(void)
+{
+static uint8_t pegel=0;
+static uint8_t pegelalt=0;
+uint8_t rueckgabe=0;
+
+	if(TASTER_C5) //taster gedrückt
+	{
+		pegel=1;
+			
+		if(pegelalt==0)
+		{
+				rueckgabe=1;
+		}
+	}
+	else
+	{
+		pegel=0;
+		rueckgabe=0;
+	}
+		
+		
+		
+	pegelalt=pegel;
+	return rueckgabe;
+}
 
 int main(void)
 {
@@ -17,33 +48,17 @@ int main(void)
 	DDRC=0x00;
 	PORTC=0x00;
 	
-
-	uint8_t test=0;
-	uint8_t pegel=0;
-	uint8_t pegelalt=0;
+	uint8_t zaehler=0;
 	
 	while(1)
 	{ 
-		
-		if(!(PINC&(1<<PC5))) //taster gedrückt
-		{
-			pegel=1;
-			
-			if(pegelalt==0)
-			{
-				test++;
-			}
-		}
-		
-		else
-		{
-			pegel=0;
-		}
-		
-		
-		PORTB=test;
-		pegelalt=pegel;
-		
+	
+	if(taster())
+	{
+	zaehler++;
+	}
+	
+		PORTB=zaehler;		
 	
 	} //end while
 }//end of main
