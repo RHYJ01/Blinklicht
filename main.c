@@ -9,11 +9,64 @@
 #include <stdlib.h>
 
 #define TASTER_C5 !(PINC&(1<<PC5))
+#define TASTER_C4 !(PINC&(1<<PC4))
 
 	
+uint8_t taster(uint8_t tast_nr) // Flankenerkennung
+{
+	static uint8_t pegel4=0;
+	static uint8_t pegelalt4=0;
+	static uint8_t pegel5=0;
+	static uint8_t pegelalt5=0;
+	uint8_t rueckgabe=0;
+	
+	switch(tast_nr)
+	{
+		case 5: 	if(TASTER_C5) //taster gedrückt
+					{
+						pegel5=1;
+			
+						if(pegelalt5==0)
+						{
+							rueckgabe=1;
+						}
+					}
+					else
+					{
+						pegel5=0;
+						rueckgabe=0;
+					}
+						
+						
+						
+					pegelalt5=pegel5;
+					break;
+	
+		case 4:		if(TASTER_C4) //taster gedrückt
+					{
+						pegel4=1;
+			
+						if(pegelalt4==0)
+						{
+							rueckgabe=1;
+						}
+					}
+					else
+					{
+						pegel4=0;
+						rueckgabe=0;
+					}
+						
+						
+						
+					pegelalt4=pegel4;
+					break;
+	}
+	return rueckgabe;
+}
 
 
-uint8_t taster(void)
+/*uint8_t taster() // Flankenerkennung
 {
 static uint8_t pegel=0;
 static uint8_t pegelalt=0;
@@ -38,7 +91,7 @@ uint8_t rueckgabe=0;
 		
 	pegelalt=pegel;
 	return rueckgabe;
-}
+}*/
 
 int main(void)
 {
@@ -53,9 +106,14 @@ int main(void)
 	while(1)
 	{ 
 	
-	if(taster())
+	if(taster(5))
 	{
-	zaehler++;
+		zaehler++;
+	}
+	
+	if(taster(4))
+	{
+		zaehler--;
 	}
 	
 		PORTB=zaehler;		
