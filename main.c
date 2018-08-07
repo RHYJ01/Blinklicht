@@ -1,38 +1,49 @@
 
-/*
-Author: Justin Rhyner
-Dateiname: Blinklicht
-Datum: 06.08.2018
-*/
+
+//Autor: Justin Rhyner
+//Dateiname: Blinklicht
+//Datum: 06.08.2018
+
 
 #include <avr/io.h>
 #include <stdlib.h>
 
 
-int main()
+int main(void)
 {
-   DDRB=0xFF;  //Eingänge und Ausgänge deklarieren
-   PORTB=0x00; //LEDs Ein und Ausschalten
-   
-   DDRC=0b11011111;
-   PORTC=0x00;
-   
-   
-   PORTB|=((1<<PB0)|(1<<PB1)); //setzen mehrerer Bits
-   
-   PORTB&=~(1<<PB7); //löschen eines Bits
-   
-   PORTB^=(1<<PB2); //Toggeln, das Bit invertieren
-   
-   
-   while(1)
-   {
-   if (!(PINC&(1<<PC5)))//testen ob der Taster  LOW ist
-	{
-	PORTB|=(1<<PB7);    // Wenn der Schalter LOW ist, PB7 HIGH
+	DDRB=0b11111111; //Ganzer Port B als Ausgang definieren
+	PORTB=0x00; 
 	
-	}
-  
-   }
-   
-}
+	DDRC=0x00;
+	PORTC=0x00;
+	
+
+	uint8_t test=0;
+	uint8_t pegel=0;
+	uint8_t pegelalt=0;
+	
+	while(1)
+	{ 
+		
+		if(!(PINC&(1<<PC5))) //taster gedrückt
+		{
+			pegel=1;
+			
+			if(pegelalt==0)
+			{
+				test++;
+			}
+		}
+		
+		else
+		{
+			pegel=0;
+		}
+		
+		
+		PORTB=test;
+		pegelalt=pegel;
+		
+	
+	} //end while
+}//end of main
